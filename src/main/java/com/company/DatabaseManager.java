@@ -1,8 +1,10 @@
 package com.company;
 
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseManager {
@@ -21,10 +23,16 @@ public class DatabaseManager {
         }
     }
 
-    public List<Country> getCountries (){
+    public List<Country> getCountries() {
         var session = factory.openSession();
 
-       return session.createQuery("FROM Country").list();
-
+        try {
+            return session.createQuery("FROM Country").list();
+        } catch (HibernateException ex) {
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return new ArrayList<>();
     }
 }
