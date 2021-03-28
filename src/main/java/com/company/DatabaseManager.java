@@ -16,6 +16,7 @@ public class DatabaseManager {
             factory = new Configuration()
                     .configure()
                     .addAnnotatedClass(Country.class)
+                    .addAnnotatedClass(Airport.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Failed to create sessionFactory object." + ex);
@@ -35,4 +36,18 @@ public class DatabaseManager {
         }
         return new ArrayList<>();
     }
+
+    public List<Airport> getAirports() {
+        var session = factory.openSession();
+
+        try {
+            return session.createQuery("FROM Airport").list();
+        } catch (HibernateException ex) {
+            System.err.println(ex);
+        } finally {
+            session.close();
+        }
+        return new ArrayList<>();
+    }
+
 }
